@@ -1,6 +1,5 @@
 package com.company.core;
 
-import com.company.core.utils.ProxyTestModel;
 
 import java.util.Map;
 
@@ -10,11 +9,10 @@ import java.util.Map;
 public class TaskModel {
     //步骤
     public transient STEP step;
-    //状态值 用于判断是否需要代理
-    public transient int status;
     //自定义使用
     public transient int arg;
 
+    public transient int status;
     //失败重试
     public transient int reTryConnCount;
     public transient int reTryReadCount;
@@ -32,8 +30,6 @@ public class TaskModel {
     public transient String result;
     //失败原因
     public transient String errMsg;
-
-    public transient ProxyTestModel proxy;
 
     public TaskModel(String url, App app, STEP step) {
         this.url = url;

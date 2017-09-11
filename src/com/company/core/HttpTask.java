@@ -14,8 +14,6 @@ public class HttpTask implements Runnable {
 
     @Override
     public void run() {
-//        System.out.println("HttpTask=111=>"+App.atomicInteger.getAndIncrement());
         HttpUtils.getResult(task);
-//        System.out.println("HttpTask=222=>"+App.atomicInteger.getAndDecrement());
     }
 }

@@ -9,53 +9,51 @@ import java.util.concurrent.*;
  * Created by ms on 2017/9/9.
  */
 public abstract class App implements IParse {
-    private int queueLen;
-    private ThreadPoolExecutor threadPool;
-    //ArrayBlockingQueue的长度
-    protected int queueCap = 3000;
-    //核心线程数
-    protected int coreThread = 20;
-    protected int maxThread = 5*coreThread+1;
+    private int DEFAULT_CORE = 20;
+    private int DEFAULT_CAP = 3000;
+    private int DEFAULT_MAX = DEFAULT_CORE*10;
 
+    private ThreadPoolExecutor threadPool;
+
+    /**
+     * 添加网络请求任务
+     * */
     public void addHttpTask(TaskModel task) {
         if(task != null) {
             threadPool.execute(new HttpTask(task));
-            debug(task,1);
         }
     }
 
+    //网络请求成功后的回调
     public void addParseTask(TaskModel task) {
         if(task != null) {
             threadPool.execute(()->parse(task));
-            debug(task, 2);
         }
     }
 
-    private void debug(TaskModel task, int tag) {
-//        queueLen = threadPool.getQueue().size();
-//        if(queueLen == 0)
-//            System.out.println(String.format("tag:%d  step:%d read:%d  conn:%d res:%d url:%s", tag, task.step.ordinal(),
-//                    task.reTryReadCount, task.reTryConnCount, task.result==null?-1:task.result.length(), task.url));
-    }
-
     public void init(){
-        threadPool = new ThreadPoolExecutor(coreThread, maxThread, 30,
-                TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(queueCap),
+        threadPool = new ThreadPoolExecutor(getThreadCore(), getThreadMax(), 30,
+                TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(getQueueCap()),
                 new RejectedExecutionHandler() {
 
                     @Override
                     public void rejectedExecution(Runnable r, ThreadPoolExecutor executor) {
                         //将处理不了的返回队列
+                        //TODO
                         App360.log360.error("==>rejectedExecution");
                     }
                 });
     }
 
+    //开始任务
     public void start() {
         init();
         firstPage();
     }
 
+    /**
+     * 子类初始化
+     * */
     protected abstract void firstPage();
 
     int flag=0;
@@ -80,4 +78,15 @@ public abstract class App implements IParse {
         }
     }
 
+    protected int getThreadCore(){
+        return DEFAULT_CORE;
+    }
+
+    protected int getThreadMax(){
+        return DEFAULT_MAX;
+    }
+
+    protected int getQueueCap(){
+        return DEFAULT_CAP;
+    }
 }

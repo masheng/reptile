@@ -120,6 +120,7 @@ public class App360 extends App implements IParse {
         }
     }
 
+    //根据下标 获取第几页的数据 需要同步操作
     private void pageInc(App360Model task){
         if(task.csid == 0) {
             System.out.println("err csid is 0");
@@ -167,7 +168,8 @@ public class App360 extends App implements IParse {
                 addHttpTask(data);
             }
     }
-int count = 0;
+
+    int count = 0;
     private void getInfoAll(App360InfoModel data) {
             Document docInfo = Jsoup.parse(data.result);
             Element info = docInfo.getElementsByClass("software-form").get(0);
