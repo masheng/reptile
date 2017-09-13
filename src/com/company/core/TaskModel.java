@@ -6,12 +6,12 @@ import java.util.Map;
 /**
  * Created by ms on 2017/9/9.
  */
-public class TaskModel {
+public class TaskModel implements Cloneable{
     //步骤
     public transient STEP step;
     //自定义使用
-    public transient int arg;
-    public transient int arg1;
+//    public transient int arg;
+//    public transient int arg1;
 
     public transient int status;
     //失败重试
@@ -45,7 +45,6 @@ public class TaskModel {
     public String toString() {
         return "TaskModel{" +
                 "step=" + step +
-                ", arg=" + arg +
                 ", reTryConnCount=" + reTryConnCount +
                 ", reTryReadCount=" + reTryReadCount +
                 ", app=" + app +
@@ -56,5 +55,15 @@ public class TaskModel {
                 ", result='" + result + '\'' +
                 ", errMsg='" + errMsg + '\'' +
                 '}';
+    }
+
+    @Override
+    protected Object clone() {
+        try {
+            return super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

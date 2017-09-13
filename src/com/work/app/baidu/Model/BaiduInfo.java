@@ -73,4 +73,5 @@ public class BaiduInfo {
     public String brief;//app介绍
     public int yesterday_download_pid;//昨天下载数量
     public String category;//类别
+    public String subcategory;//子类别
 }

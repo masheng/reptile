@@ -31,9 +31,10 @@ CREATE TABLE IF NOT EXISTS `baidu` (
   `yesterday_download_pid` int NOT NULL default 0,  #昨日次数
   `updatetime` DATE,  #最后更新日期
   `brief` text,  #描述
-  `manual_short_brief` varchar(1000),  #短评
+  `manual_short_brief` varchar(2000),  #短评
   `cateid` varchar(50),  #用处未知
   `category` varchar(50),  #类别
+  `subcategory` varchar(50),  #子类别
   `versionname` varchar(40) NOT NULL default '', #版本号
   `versioncode` varchar(40) NOT NULL default '', #版本号
   `size_ori` int NOT NULL default 0,  #大小

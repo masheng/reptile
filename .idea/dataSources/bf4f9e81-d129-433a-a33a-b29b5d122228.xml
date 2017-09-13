@@ -170,48 +170,52 @@
       <Position>12</Position>
       <DataType>varchar(50)|0</DataType>
     </column>
-    <column id="41" parent="12" name="versionname">
+    <column id="41" parent="12" name="subcategory">
       <Position>13</Position>
-      <DataType>varchar(40)|0</DataType>
-      <NotNull>1</NotNull>
-      <DefaultExpression>&apos;&apos;</DefaultExpression>
+      <DataType>varchar(50)|0</DataType>
     </column>
-    <column id="42" parent="12" name="versioncode">
+    <column id="42" parent="12" name="versionname">
       <Position>14</Position>
       <DataType>varchar(40)|0</DataType>
       <NotNull>1</NotNull>
       <DefaultExpression>&apos;&apos;</DefaultExpression>
     </column>
-    <column id="43" parent="12" name="size_ori">
+    <column id="43" parent="12" name="versioncode">
       <Position>15</Position>
+      <DataType>varchar(40)|0</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+    </column>
+    <column id="44" parent="12" name="size_ori">
+      <Position>16</Position>
       <DataType>int(11)|0</DataType>
       <NotNull>1</NotNull>
       <DefaultExpression>&apos;0&apos;</DefaultExpression>
     </column>
-    <column id="44" parent="12" name="platform_version">
-      <Position>16</Position>
+    <column id="45" parent="12" name="platform_version">
+      <Position>17</Position>
       <DataType>varchar(40)|0</DataType>
       <NotNull>1</NotNull>
       <DefaultExpression>&apos;0&apos;</DefaultExpression>
     </column>
-    <column id="45" parent="12" name="package_name">
-      <Position>17</Position>
-      <DataType>varchar(100)|0</DataType>
-      <NotNull>1</NotNull>
-      <DefaultExpression>&apos;&apos;</DefaultExpression>
-    </column>
-    <column id="46" parent="12" name="packageid">
+    <column id="46" parent="12" name="package_name">
       <Position>18</Position>
       <DataType>varchar(100)|0</DataType>
       <NotNull>1</NotNull>
       <DefaultExpression>&apos;&apos;</DefaultExpression>
     </column>
-    <column id="47" parent="12" name="insertTime">
+    <column id="47" parent="12" name="packageid">
       <Position>19</Position>
+      <DataType>varchar(100)|0</DataType>
+      <NotNull>1</NotNull>
+      <DefaultExpression>&apos;&apos;</DefaultExpression>
+    </column>
+    <column id="48" parent="12" name="insertTime">
+      <Position>20</Position>
       <DataType>date|0</DataType>
       <NotNull>1</NotNull>
     </column>
-    <key id="48" parent="12" name="PRIMARY">
+    <key id="49" parent="12" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
