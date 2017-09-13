@@ -11,6 +11,7 @@ public class TaskModel {
     public transient STEP step;
     //自定义使用
     public transient int arg;
+    public transient int arg1;
 
     public transient int status;
     //失败重试
@@ -18,6 +19,7 @@ public class TaskModel {
     public transient int reTryReadCount;
 
     public transient App app;
+    public transient ICheckSend check;
 
     public transient String url;
     //http消息头

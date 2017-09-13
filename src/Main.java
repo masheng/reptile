@@ -1,7 +1,8 @@
+import com.books.dangdang.Dang;
 import com.company.core.utils.D;
 import com.work.app.app360.App360;
 import com.company.core.App;
-import com.work.proxyIp.kuai_proxy.AppKuai;
+import com.work.app.baidu.AppBaidu;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -11,7 +12,8 @@ public class Main {
     public static void main(String[] args) {
         App app = null;
         long time = System.currentTimeMillis();
-        app = new App360();
+//        app = new App360();
+        app = new AppBaidu();
         app.start();
 
         if(app.finish()) {

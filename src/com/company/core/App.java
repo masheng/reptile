@@ -1,6 +1,7 @@
 package com.company.core;
 
 
+import com.company.core.utils.D;
 import com.work.app.app360.App360;
 
 import java.util.concurrent.*;
@@ -71,7 +72,7 @@ public abstract class App implements IParse {
                 flag = 0;
             System.out.println(threadPool.getQueue().size()+"---"+threadPool.getActiveCount()+"--"+(System.currentTimeMillis()-time)/1000);
             try {
-                Thread.currentThread().sleep(5000);
+                Thread.currentThread().sleep(10000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

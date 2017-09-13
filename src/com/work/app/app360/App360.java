@@ -110,7 +110,6 @@ public class App360 extends App implements IParse {
                     int index = token.indexOf("=");
                     fd.cid = token.substring(index+1, token.length());
                 }
-
             }
 
             fd.app = this;
