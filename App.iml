@@ -7,9 +7,26 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="org.jsoup:jsoup:1.10.3" level="project" />
-    <orderEntry type="library" name="com.google.code.gson:gson:2.2.3" level="project" />
-    <orderEntry type="library" name="mysql:mysql-connector-java:5.1.6" level="project" />
-    <orderEntry type="library" name="log4j-jcl-2.9.0" level="project" />
+    <orderEntry type="library" name="mysql-connector-java-6.0.6" level="project" />
+    <orderEntry type="library" name="JsoupXpath-2.3.2" level="project" />
+    <orderEntry type="library" name="log4j-api-2.7" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/jsoup-1.10.3.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/gson-2.2.3.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>

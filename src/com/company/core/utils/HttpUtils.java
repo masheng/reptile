@@ -1,20 +1,13 @@
 package com.company.core.utils;
 
-import com.company.Config;
-import com.company.core.ICheckSend;
-import com.company.core.TaskModel;
+import com.books.utils.BookConstant;
+import com.company.core.model.TaskModel;
+import org.jsoup.Jsoup;
+
 import java.io.*;
 import java.net.*;
-import java.security.KeyManagementException;
-import java.security.NoSuchProviderException;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
-
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-
-import javax.net.ssl.*;
 
 /**
  * Created by ms on 2017/7/31.
@@ -25,27 +18,34 @@ public class HttpUtils {
     private final static boolean DEBUG = true;
     public final static String POST = "POST";
     public final static String GET = "GET";
-    //最大重试次数
-    public final static int RETRY = 5;
 
-    public static String getText(TaskModel task) {
+    /**
+     * 处理网络请求
+     */
+    public static String disposeTask(TaskModel task) {
         if (task == null || task.url == null || task.url.trim().length() < 7) {
             return null;
         }
         int responseCode;
 
-        if(task.app instanceof ICheckSend)
-            if(((ICheckSend) task.app).check(task)) {
-                return null;
+        if (!task.app.check(task))
+            return null;
+
+        if (task.delayTime > 0) {
+            try {
+                Thread.currentThread().sleep(task.delayTime);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
+        }
 
-        if (task.kind == null)
+        if (task.requestType == null)
             if (task.params != null && task.params.size() > 0)
-                task.kind = POST;
+                task.requestType = POST;
             else
-                task.kind = GET;
+                task.requestType = GET;
 
-            //https
+        //https
 //        SSLSocketFactory ssf=null;
 //        try {
 //            SSLContext ctx = SSLContext.getInstance("SSL");
@@ -82,7 +82,7 @@ public class HttpUtils {
             URL url = new URL(task.url);
             httpUrlConnection = (HttpURLConnection) url.openConnection();
 
-            httpUrlConnection.setRequestMethod(task.kind);
+            httpUrlConnection.setRequestMethod(task.requestType);
             httpUrlConnection.setDoOutput(true);
             httpUrlConnection.setDoInput(true);
             httpUrlConnection.setUseCaches(false);
@@ -92,7 +92,6 @@ public class HttpUtils {
             if (task.headers != null && task.headers.size() > 0)
                 for (Map.Entry<String, String> entry : task.headers.entrySet())
                     httpUrlConnection.setRequestProperty(entry.getKey(), entry.getValue());
-
 
             try {
                 httpUrlConnection.connect();
@@ -109,29 +108,43 @@ public class HttpUtils {
                     printWriter.close();
                 }
 
+                new HttpsBerBer("");
+
                 responseCode = httpUrlConnection.getResponseCode();
+                //TODO 需要考虑重定向
+                switch (responseCode) {
+                    case 200:
 
-                if (responseCode != 200) {
-                    if (task.reTryConnCount > RETRY) {
-                        task.errMsg = "HttpUtils  getText  httpUrlConnection.getResponseCode()"
-                                + "\nretry connect greater than RETRY and response code is " + httpUrlConnection.getResponseCode();
-                        task.app.failed(task);
+                        break;
+                    case 403:
+                    case 404:
+                        task.errMsg = "response code is " + responseCode;
+                        task.errCode = ErrorCode.RESPONSE_CODE_ERR;
+                        task.app.onFailed(task);
                         return null;
-                    }
+                    default:
+                        if (task.reTryConnCount > task.reTryMaxCount) {
+                            task.errMsg = "HttpUtils  getText  httpUrlConnection.getResponseCode()"
+                                    + "\nretry connect greater than RETRY and response code is " + httpUrlConnection.getResponseCode();
+                            task.errCode = ErrorCode.RESPONSE_CODE_ERR;
+                            task.app.onFailed(task);
+                            return null;
+                        }
 
-                    //TODO 测试
-                    System.out.println(responseCode + "  response err  " + task.url);
+                        //TODO 测试
+                        System.out.println("连接失败 responseCode==>" + responseCode + "  重试次数" + task.reTryConnCount + "  response err==>" + task.url);
 
-                    task.reTryConnCount++;
-                    task.app.addHttpTask(task);
-
-                    return null;
+                        task.reTryConnCount++;
+                        task.app.addHttpTask(task);
+                        return null;
                 }
+
             } catch (SocketTimeoutException ext) {
-                if (task.reTryConnCount > RETRY) {
+                if (task.reTryConnCount > task.reTryMaxCount) {
                     task.errMsg = "HttpUtils  getText connect() or getResponseCode() retry connect greater than RETRY"
                             + "\n and catch a exception ==>" + ext.getMessage();
-                    task.app.failed(task);
+                    task.errCode = ErrorCode.CONN_ERR;
+                    task.app.onFailed(task);
                     return null;
                 }
 
@@ -164,10 +177,11 @@ public class HttpUtils {
                     bos.flush();
                 }
             } catch (IOException ext) {
-                if (task.reTryReadCount > RETRY) {
+                if (task.reTryReadCount > task.reTryMaxCount) {
                     task.errMsg = "HttpUtils  getText bis.read() retry read greater than RETRY"
                             + "\n and catch a exception ==>" + ext.getMessage();
-                    task.app.failed(task);
+                    task.errCode = ErrorCode.READ_ERR;
+                    task.app.onFailed(task);
                     return null;
                 }
                 //TODO 测试
@@ -182,23 +196,38 @@ public class HttpUtils {
                 bis.close();
             }
 
-            String result = bos.toString("UTF-8");
-            return result;
+            String response = bos.toString(task.resEncode);
+//            if (!StrUtils.isEmpty(task.resEncode) && !TaskModel.UTF8.equals(task.resEncode.toLowerCase())) {
+//                response = new String(response.getBytes(task.resEncode), TaskModel.UTF8);
+//            }
+
+            D.p("response==>" + response);
+
+            task.resDoc = Jsoup.parse(response, TaskModel.UTF8);
+            task.response = response;
+            task.app.parse(task);
+            return response;
         } catch (IOException e) {
-            task.errMsg = "HttpUtils  getText catch an exception ==>" + e.getMessage();
-            task.app.failed(task);
+            task.errMsg = "HttpUtils  getText catch an exception ==>" + e.getLocalizedMessage();
+            task.errCode = ErrorCode.READ_ERR;
+            task.app.onFailed(task);
 //            task.app.addHttpTask(task);
         }
 
         return null;
     }
 
-    public static void getResult(TaskModel task) {
-        task.result = getText(task);
-
-        if (task.result == null)
-            return;
-
-        task.app.addParseTask(task);
+    public static String gbEncoding(final String gbString) {
+        char[] utfBytes = gbString.toCharArray();
+        String unicodeBytes = "";
+        for (int byteIndex = 0; byteIndex < utfBytes.length; byteIndex++) {
+            String hexB = Integer.toHexString(utfBytes[byteIndex]);
+            if (hexB.length() <= 2) {
+                hexB = "00" + hexB;
+            }
+            unicodeBytes = unicodeBytes + "\\u" + hexB;
+        }
+        System.out.println("unicodeBytes is: " + unicodeBytes);
+        return unicodeBytes;
     }
 }
