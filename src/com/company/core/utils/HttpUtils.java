@@ -1,6 +1,5 @@
 package com.company.core.utils;
 
-import com.books.utils.BookConstant;
 import com.company.core.model.TaskModel;
 import org.jsoup.Jsoup;
 
@@ -201,7 +200,7 @@ public class HttpUtils {
 //                response = new String(response.getBytes(task.resEncode), TaskModel.UTF8);
 //            }
 
-            D.p("response==>" + response);
+//            D.i("response==>" + response);
 
             task.resDoc = Jsoup.parse(response, TaskModel.UTF8);
             task.response = response;

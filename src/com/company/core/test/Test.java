@@ -30,7 +30,7 @@ public class Test extends App {
     public void parse(TaskModel task) {
         switch (task.tag) {
             case STEP1:
-                D.p("res==>" + task.response);
+                D.i("res==>" + task.response);
                 //解析完成 保存
                 save(task.response);
                 break;

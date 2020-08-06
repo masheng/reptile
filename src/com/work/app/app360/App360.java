@@ -211,7 +211,7 @@
 //
 //                count += state.executeUpdate();
 //                if(count%1000==0)
-//                    D.p("inserted==>"+count);
+//                    D.i("inserted==>"+count);
 //            } catch (SQLException e) {
 //                e.printStackTrace();
 //            }

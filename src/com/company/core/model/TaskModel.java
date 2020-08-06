@@ -1,6 +1,6 @@
 package com.company.core.model;
 
-import com.books.utils.InfoModel;
+import com.work.books.utils.InfoModel;
 import com.company.core.App;
 import org.jsoup.nodes.Document;
 

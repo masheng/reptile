@@ -78,7 +78,7 @@ public class ThreadUtils {
             } else
                 flag = 0;
 
-//            D.p(String.format("queue size:%d  thread count:%d  during s:%d", threadPool.getQueue().size(), threadPool.getActiveCount(), (System.currentTimeMillis() - time) / 1000));
+//            D.i(String.format("queue size:%d  thread count:%d  during s:%d", threadPool.getQueue().size(), threadPool.getActiveCount(), (System.currentTimeMillis() - time) / 1000));
             log();
 
             try {

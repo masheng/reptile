@@ -140,7 +140,7 @@
 //            if(nullIndex[taskModel.tag]==0 || nullIndex[taskModel.tag]>taskModel.index)
 //                nullIndex[taskModel.tag]=taskModel.index;
 //            String  err = obj.get("message").getAsString();
-////            D.p("over==>"+taskModel.tag+"==="+taskModel.index+"=="+err);
+////            D.i("over==>"+taskModel.tag+"==="+taskModel.index+"=="+err);
 //        }
 //    }
 //
@@ -194,7 +194,7 @@
 //
 //            state.executeUpdate();
 ////            if(count%1000==0)
-////                D.p("inserted==>"+count);
+////                D.i("inserted==>"+count);
 //        } catch (SQLException e) {
 //            e.printStackTrace();
 //        }
@@ -203,7 +203,7 @@
 //    @Override
 //    public void failed(TaskModel taskModel) {
 //
-//        D.p("err==>"+taskModel.errMsg);
+//        D.i("err==>"+taskModel.errMsg);
 //    }
 //
 //    @Override
