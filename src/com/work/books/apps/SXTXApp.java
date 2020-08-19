@@ -95,7 +95,7 @@ public class SXTXApp extends BookApp {
         scanInfoModel.cateInfo.put(cateMd5, new ScanInfoModel.ScanInfo(task.cate, count));
         count = pageCountOff(count, cateMd5, task.url);
 
-        for (int i = 2; i < count; i++) {
+        for (int i = 2; i <= count; i++) {
             TaskModel taskModel = createTask(LIST);
             taskModel.url = String.format("%s/page/%d/", task.url, i);
             addHttpTask(taskModel);

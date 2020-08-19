@@ -64,7 +64,7 @@ public class PGApp extends BookAppTemp {
         count = count / 10 + count % 10 == 0 ? 0 : 1;
         count = cateCount(task.cate, task.url, count);
 
-        for (int i = 2; i < count; i++) {
+        for (int i = 2; i <= count; i++) {
             TaskModel taskModel = createTask(LIST);
             taskModel.url = String.format("http://panghubook.cn/api/books/?tag=%d&p=%d", Integer.parseInt(task.obj), i);
             taskModel.cate = task.cate;

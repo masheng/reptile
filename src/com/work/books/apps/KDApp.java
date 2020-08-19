@@ -128,7 +128,7 @@ public class KDApp extends BookAppTemp {
             infoModel.bookName = StrUtils.subStr(title, "《", "》", true);
             if (title.contains("（作者）")) {
                 String[] author = title.split("（作者）");
-                infoModel.bookAuthor = author[0].substring(author[0].indexOf("》"));
+                infoModel.bookAuthor = author[0].substring(author[0].indexOf("》") + 1);
             } else if (title.contains("+")) {
                 String author = title.substring(title.indexOf("》") + 1).toLowerCase();
                 String[] splie = author.split("\\+");
