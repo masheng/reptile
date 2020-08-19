@@ -50,7 +50,7 @@ public class DSApp extends BookApp {
         int count = Integer.parseInt(pageCount);
 
         scanInfoModel.cateInfo.put(DEFAULT_SCAN_CATE, new ScanInfoModel.ScanInfo(DEFAULT_SCAN_CATE, count));
-        count = pageCountOff(count, DEFAULT_SCAN_CATE);
+        count = pageCountOff(count, DEFAULT_SCAN_CATE, task.url);
 
         for (int i = 1; i <= count; i++) {
             //https://ibooks.org.cn/page/98
@@ -96,7 +96,7 @@ public class DSApp extends BookApp {
                 downModel.type = BookConstant.BAIDU_PAN;
                 downModel.code = text.substring(text.lastIndexOf("(") + 1, text.lastIndexOf(")"));
             } else {
-                D.w(String.format("desc:%s err:无法获取百度提取码  url:%s", task.desc, task.url));
+                D.w(String.format("cate:%s err:无法获取百度提取码  url:%s", task.cate, task.url));
             }
         }
         model.addDownModel(downModel);

@@ -4,12 +4,12 @@ package com.work.books.utils;
 import java.util.Objects;
 
 public class DownModel {
-    public String pageUrl;
-    private String downUrl;
-    public String urlMD5;
-    public String code;
+    public String pageUrl = "";
+    private String downUrl = "";
+    public String urlMD5 = "";
+    public String code = "";
     public int type;    //网盘类型
-    public String redundancy;   //冗余字段
+    public String redundancy = "";   //冗余字段
 
     public DownModel() {
     }

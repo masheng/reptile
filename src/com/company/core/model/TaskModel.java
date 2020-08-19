@@ -31,11 +31,16 @@ public class TaskModel {
     public transient int reTryConnCount;
     public transient int reTryReadCount;
     public transient int reTryMaxCount = 5;
-
+    //true 则先查数据库是否已经请求过 没请求过则请求并加入数据库 否则不请求网络
+    public boolean testSite;
+    //是否使用jsoup直接解析
+    public boolean parse = true;
     //任务的标记
     public transient String tag;
+    public String cate;
+
     //每个请求有各自的用途
-    public String desc;
+    public String obj;
 
     public transient String url;
     //http消息头
@@ -44,6 +49,9 @@ public class TaskModel {
     public transient Map<String, String> params;
     //post get
     public transient String requestType;
+    //用于重定向
+    public boolean redirect;
+    public String redirectUrl;
     //网络请求返回的结果
     public transient String response;
     public transient Document resDoc;

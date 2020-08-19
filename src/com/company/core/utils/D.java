@@ -70,6 +70,10 @@ public class D {
         log.error(new StringBuffer().append("[").append(tag).append("]").append(message).toString());
     }
 
+    public static void ee(String str) {
+        System.err.println(str);
+    }
+
     /**
      * 获取最开始的调用者所在类
      *

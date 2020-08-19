@@ -51,7 +51,7 @@ public class WBYApp extends BookApp {
             TaskModel model = createTask(CATEGORY);
             model.resEncode = TaskModel.GB2312;
             model.url = BASE_URL + cate.attr("href");
-            model.desc = cate.text();
+            model.cate = cate.text();
             addHttpTask(model);
 
             if (D.DEBUG)
@@ -71,9 +71,9 @@ public class WBYApp extends BookApp {
         String pageCount = lastUrl.substring(lastUrl.lastIndexOf('_') + 1, lastUrl.lastIndexOf('.'));
         count = Integer.parseInt(pageCount);
 
-        String cateMd5 = MD5Utils.strToMD5(task.desc);
-        scanInfoModel.cateInfo.put(cateMd5, new ScanInfoModel.ScanInfo(DEFAULT_SCAN_CATE, count));
-        count = pageCountOff(count, cateMd5);
+        String cateMd5 = MD5Utils.strToMD5(task.cate);
+        scanInfoModel.cateInfo.put(cateMd5, new ScanInfoModel.ScanInfo(task.cate, count));
+        count = pageCountOff(count, cateMd5, task.url);
 
         for (int i = 2; i <= count; i++) {
             TaskModel taskModel = createTask(LIST);

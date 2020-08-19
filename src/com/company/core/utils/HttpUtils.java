@@ -3,8 +3,15 @@ package com.company.core.utils;
 import com.company.core.model.TaskModel;
 import org.jsoup.Jsoup;
 
+import java.io.FileInputStream;
+import java.security.*;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import javax.net.ssl.*;
+
 import java.io.*;
 import java.net.*;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
@@ -44,53 +51,27 @@ public class HttpUtils {
             else
                 task.requestType = GET;
 
-        //https
-//        SSLSocketFactory ssf=null;
-//        try {
-//            SSLContext ctx = SSLContext.getInstance("SSL");
-//
-//            // Implementation of a trust manager for X509 certificates
-//            X509TrustManager tm509 = new X509TrustManager() {
-//
-//                public void checkClientTrusted(X509Certificate[] xcs, String string) throws CertificateException {
-//
-//                }
-//
-//                public void checkServerTrusted(X509Certificate[] xcs, String string) throws CertificateException {
-//                }
-//
-//                public X509Certificate[] getAcceptedIssuers() {
-//                    return null;
-//                }
-//            };
-//            TrustManager[] tm = { tm509};
-//            SSLContext sslContext = SSLContext.getInstance("SSL", "SunJSSE");
-//            sslContext.init(null, tm, new java.security.SecureRandom());
-//            ssf = sslContext.getSocketFactory();
-//        } catch (NoSuchAlgorithmException e) {
-//            e.printStackTrace();
-//        } catch (NoSuchProviderException e) {
-//            e.printStackTrace();
-//        } catch (KeyManagementException e) {
-//            e.printStackTrace();
-//        }
-
         HttpURLConnection httpUrlConnection = null;
 
         try {
-            URL url = new URL(task.url);
+            //可以解决https问题
+            URL url = new URL(encodeUrl(task.url));
             httpUrlConnection = (HttpURLConnection) url.openConnection();
 
+            if (task.redirect)
+                httpUrlConnection.setInstanceFollowRedirects(false);
             httpUrlConnection.setRequestMethod(task.requestType);
             httpUrlConnection.setDoOutput(true);
             httpUrlConnection.setDoInput(true);
             httpUrlConnection.setUseCaches(false);
-            httpUrlConnection.setConnectTimeout(10000);
+            httpUrlConnection.setConnectTimeout(70000);
             httpUrlConnection.setReadTimeout(8000);
 
             if (task.headers != null && task.headers.size() > 0)
                 for (Map.Entry<String, String> entry : task.headers.entrySet())
                     httpUrlConnection.setRequestProperty(entry.getKey(), entry.getValue());
+            else
+                httpUrlConnection.setRequestProperty("user-agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_2) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.4 Safari/605.1.15");
 
             try {
                 httpUrlConnection.connect();
@@ -107,13 +88,14 @@ public class HttpUtils {
                     printWriter.close();
                 }
 
-                new HttpsBerBer("");
-
                 responseCode = httpUrlConnection.getResponseCode();
                 //TODO 需要考虑重定向
                 switch (responseCode) {
                     case 200:
 
+                        break;
+                    case 302:
+                        task.redirectUrl = httpUrlConnection.getHeaderField("Location");
                         break;
                     case 403:
                     case 404:
@@ -202,7 +184,8 @@ public class HttpUtils {
 
 //            D.i("response==>" + response);
 
-            task.resDoc = Jsoup.parse(response, TaskModel.UTF8);
+            if (task.parse)
+                task.resDoc = Jsoup.parse(response, TaskModel.UTF8);
             task.response = response;
             task.app.parse(task);
             return response;
@@ -216,17 +199,23 @@ public class HttpUtils {
         return null;
     }
 
-    public static String gbEncoding(final String gbString) {
-        char[] utfBytes = gbString.toCharArray();
-        String unicodeBytes = "";
-        for (int byteIndex = 0; byteIndex < utfBytes.length; byteIndex++) {
-            String hexB = Integer.toHexString(utfBytes[byteIndex]);
-            if (hexB.length() <= 2) {
-                hexB = "00" + hexB;
-            }
-            unicodeBytes = unicodeBytes + "\\u" + hexB;
+    private static String encodeUrl(String url) {
+        try {
+            URL u = new URL(url);
+            return encodeUrl(u).toExternalForm();
+        } catch (Exception var2) {
+            return url;
         }
-        System.out.println("unicodeBytes is: " + unicodeBytes);
-        return unicodeBytes;
+    }
+
+    private static URL encodeUrl(URL u) {
+        try {
+            String urlS = u.toExternalForm();
+            urlS = urlS.replace(" ", "%20");
+            URI uri = new URI(urlS);
+            return new URL(uri.toASCIIString());
+        } catch (MalformedURLException | URISyntaxException var3) {
+            return u;
+        }
     }
 }

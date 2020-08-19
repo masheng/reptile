@@ -56,7 +56,7 @@ public class ZXApp extends BookApp {
             String cateInfo = cls.getElementsByTag("span").text();
             TaskModel taskModel = createTask(CATEGORY);
             taskModel.url = url;
-            taskModel.desc = cateInfo;
+            taskModel.cate = cateInfo;
             addHttpTask(taskModel);
 
             if (D.DEBUG)
@@ -78,9 +78,9 @@ public class ZXApp extends BookApp {
             count = item.size();
         }
 
-        String cateMd5 = MD5Utils.strToMD5(task.desc);
-        scanInfoModel.cateInfo.put(cateMd5, new ScanInfoModel.ScanInfo(task.desc, count));
-        count = pageCountOff(count, cateMd5);
+        String cateMd5 = MD5Utils.strToMD5(task.cate);
+        scanInfoModel.cateInfo.put(cateMd5, new ScanInfoModel.ScanInfo(task.cate, count));
+        count = pageCountOff(count, cateMd5, task.url);
 
         String baseUrl = url.substring(0, url.lastIndexOf("/") + 1);
         for (int i = 2; i <= count; i++) {

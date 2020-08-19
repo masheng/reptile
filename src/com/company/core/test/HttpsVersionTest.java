@@ -1,4 +1,4 @@
-package com.work.books.jing_ran;
+package com.company.core.test;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -16,24 +16,33 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-public class HttpsTest {
+public class HttpsVersionTest {
+    public static void main(String[] args) throws Exception {
+        System.out.println(sendHttps("https://bloogle.top/mulu/"));
+//        System.out.println(sendHttps("https://finance-23055.beta.qunar.com"));
+    }
+
     private static class TrustAnyTrustManager implements X509TrustManager {
         @Override
         public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
         }
+
         @Override
         public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
         }
+
         @Override
         public X509Certificate[] getAcceptedIssuers() {
             return null;
         }
     }
+
     private static class TrustAnyHostnameVerifier implements HostnameVerifier {
         public boolean verify(String hostname, SSLSession session) {
             return true;
         }
     }
+
     public static String sendHttps(String url) throws Exception {
         InputStream in = null;
         OutputStream out = null;
@@ -43,7 +52,7 @@ public class HttpsTest {
 //            System.setProperty("https.protocols", "TLSv1.2,TLSv1.1,SSLv3");
 //            SSLContext sc = SSLContext.getInstance("TLS", "SunJSSE");
             SSLContext sc = SSLContext.getInstance("TLS");
-            sc.init(null, new TrustManager[] { new TrustAnyTrustManager() }, new java.security.SecureRandom());
+            sc.init(null, new TrustManager[]{new TrustAnyTrustManager()}, new java.security.SecureRandom());
             URL console = new URL(url);
             HttpsURLConnection conn = (HttpsURLConnection) console.openConnection();
             conn.setSSLSocketFactory(sc.getSocketFactory());
@@ -63,16 +72,14 @@ public class HttpsTest {
         } finally {
             try {
                 in.close();
-            } catch (Exception e) {  }
+            } catch (Exception e) {
+            }
             try {
                 out.close();
-            } catch (Exception e) { }
+            } catch (Exception e) {
+            }
         }
         return returnValue;
     }
-    public static void main(String[] args) throws Exception {
-        System.out.println(sendHttps("https://finance-23055.beta.qunar.com"));
-//        System.out.println(sendHttps("https://books.andrewjr.wang/0:/"));
-    }
-}
 
+}

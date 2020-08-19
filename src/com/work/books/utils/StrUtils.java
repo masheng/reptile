@@ -7,7 +7,17 @@ public class StrUtils {
         return str == null || str.trim().isEmpty();
     }
 
+    /**
+     * 提取子串
+     *
+     * @param first true indexOf  false lastIndexOf
+     * */
     public static String subStr(String str, String subStart, String subEnd, boolean first) {
+        if (!str.contains(subStart) || !str.contains(subEnd)) {
+            D.w(String.format("subStr==>subStart:%s  subEnd:%s  str:%s", subStart, subEnd, str));
+            return str;
+        }
+
         int start = first ? str.indexOf(subStart) : str.lastIndexOf(subStart);
         int end = first ? str.indexOf(subEnd) : str.lastIndexOf(subEnd);
         String res = null;

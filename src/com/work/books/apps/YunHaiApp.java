@@ -50,7 +50,7 @@ public class YunHaiApp extends BookApp {
 
             TaskModel taskModel = createTask(CATEGORY);
             taskModel.url = path;
-            taskModel.desc = cateInfo;
+            taskModel.cate = cateInfo;
             addHttpTask(taskModel);
 
             if (D.DEBUG)
@@ -65,9 +65,9 @@ public class YunHaiApp extends BookApp {
         String pageCount = pageEle.substring(pageEle.lastIndexOf("共") + 1, pageEle.lastIndexOf("页"));
         int count = Integer.parseInt(pageCount);
 
-        String cateMd5 = MD5Utils.strToMD5(task.desc);
-        scanInfoModel.cateInfo.put(cateMd5, new ScanInfoModel.ScanInfo(task.desc, count));
-        count = pageCountOff(count, cateMd5);
+        String cateMd5 = MD5Utils.strToMD5(task.cate);
+        scanInfoModel.cateInfo.put(cateMd5, new ScanInfoModel.ScanInfo(task.cate, count));
+        count = pageCountOff(count, cateMd5, task.url);
 
         for (int i = 2; i <= count; i++) {
             TaskModel taskModel = createTask(LIST);

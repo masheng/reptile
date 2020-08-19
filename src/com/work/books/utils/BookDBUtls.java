@@ -37,7 +37,10 @@ public class BookDBUtls {
         if (StrUtils.isEmpty(model.bookName)) {
             D.e("bookName空 url==>" + model.pageUrl);
         }
-
+        if(model.pageUrl.length() >= 1000) {
+            D.e("页面链接过长==>" + model.pageUrl);
+            model.pageUrl = "too long";
+        }
 
         String downUlr = "";
         if (model.downModel != null && !model.downModel.isEmpty())
@@ -219,8 +222,13 @@ public class BookDBUtls {
             state.setInt(3, infoModel.bookAdd.get());
             state.setString(4, info);
             state.setInt(5, infoModel.duration);
-
-            int ret = state.executeUpdate();
+            int ret = 0;
+            try {
+                ret = state.executeUpdate();
+            } catch (Exception e) {
+                D.e("save scane info==>" + infoModel.toString());
+                e.printStackTrace();
+            }
             if (ret > 0)
                 return true;
         } catch (SQLException e) {
@@ -238,7 +246,14 @@ public class BookDBUtls {
         return false;
     }
 
+    /**
+     * 根据url查表 如果存在 则返回false 否则加入repetition表
+     * @return true 没有记录 false 已经请求过
+     * */
     public static boolean testSaveSiteInfo(String site) {
+        if (D.DEBUG)
+            return true;
+
         if (testSiteInfo(site))
             return false;
 

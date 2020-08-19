@@ -5,8 +5,8 @@ CREATE TABLE IF NOT EXISTS `book` (
   `id` int NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `bookName` varchar(200) NOT NULL default '',
   `bookFormat`  varchar(29) NOT NULL default '',
-  `downloadUrl` varchar(2000) NOT NULL default '',  /*下载url地址 格式:{"网盘类型||提取码||url",...}  以||分割*/
-  `pageUrl` varchar(200) NOT NULL default '',       #原始页面地址
+  `downloadUrl` varchar(5000) NOT NULL default '',  /*下载url地址 格式:{"网盘类型||提取码||url",...}  以||分割*/
+  `pageUrl` varchar(500) NOT NULL default '',       #原始页面地址
   `insertTime` TIMESTAMP,                           #第一次插入时的时间
   `info` varchar(500),
   `redundancy` varchar (100),   #冗余字段
@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS `scan_info` (
   `id` int NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `site` varchar(50) NOT NULL default '',
   `bookAdd` int,
-  `cateInfo` varchar(300) NOT NULL default '',
+  `cateInfo` varchar(1000) NOT NULL default '',
   `insertTime` TIMESTAMP,                         #开始扫描的时间
   `duration` int       #扫描花费的时间
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

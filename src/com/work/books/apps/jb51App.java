@@ -91,7 +91,7 @@ public class jb51App extends BookApp {
 
         String cateKey = MD5Utils.strToMD5(cate);
         scanInfoModel.cateInfo.put(cateKey, new ScanInfoModel.ScanInfo(cate, count));
-        count = pageCountOff(count, cateKey);
+        count = pageCountOff(count, cateKey, taskModel.url);
 
         for (int i = 2; i <= count; i++) {
             TaskModel task = createTask(ITEM);

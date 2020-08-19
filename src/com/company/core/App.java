@@ -5,6 +5,7 @@ import com.company.core.model.TaskModel;
 import com.company.core.utils.D;
 import com.company.core.utils.ThreadUtils;
 import com.sun.istack.internal.NotNull;
+import com.work.books.utils.BookDBUtls;
 
 /**
  * Created by ms on 2017/9/9.
@@ -13,6 +14,9 @@ public abstract class App {
     protected ThreadUtils threadUtils = new ThreadUtils();
 
     public boolean addHttpTask(TaskModel model) {
+        if (model.testSite)
+            if (!BookDBUtls.testSaveSiteInfo(model.url))
+                return true;
         return threadUtils.addTask(model);
     }
 
@@ -39,7 +43,7 @@ public abstract class App {
 
     protected TaskModel createTask(String tag) {
         TaskModel taskModel = new TaskModel(this, tag);
-        taskModel.desc = getClass().getName();
+        taskModel.cate = getClass().getName();
         return taskModel;
     }
 
@@ -52,6 +56,6 @@ public abstract class App {
     public abstract void parse(@NotNull TaskModel task);
 
     public void onFailed(TaskModel task) {
-        D.e(String.format("app:%s tag:%s err:%s url:%s", task.desc, task.tag, task.errMsg, task.url));
+        D.e(String.format("app:%s tag:%s err:%s url:%s", task.cate, task.tag, task.errMsg, task.url));
     }
 }

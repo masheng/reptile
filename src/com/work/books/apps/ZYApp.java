@@ -67,7 +67,7 @@ public class ZYApp extends BookApp {
         int count = Integer.parseInt(countPage);
 
         scanInfoModel.cateInfo.put(DEFAULT_SCAN_CATE, new ScanInfoModel.ScanInfo(DEFAULT_SCAN_CATE, count));
-        count = pageCountOff(count, DEFAULT_SCAN_CATE);
+        count = pageCountOff(count, DEFAULT_SCAN_CATE, task.url);
 
         String baseUrl = "http://pdf.018zy.com/page/";
         for (int i = 2; i <= count; i++) {

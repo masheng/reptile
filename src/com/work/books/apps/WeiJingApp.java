@@ -31,8 +31,6 @@ public class WeiJingApp extends BookApp {
             case INFO:
                 parseInfo(task);
                 break;
-
-
         }
     }
 
@@ -51,7 +49,7 @@ public class WeiJingApp extends BookApp {
         int count = Integer.parseInt(pageCount);
 
         scanInfoModel.cateInfo.put(DEFAULT_SCAN_CATE, new ScanInfoModel.ScanInfo(DEFAULT_SCAN_CATE, count));
-        count = pageCountOff(count, DEFAULT_SCAN_CATE);
+        count = pageCountOff(count, DEFAULT_SCAN_CATE, task.url);
 
         for (int i = 2; i <= count; i++) {
             TaskModel taskModel = createTask(LIST);

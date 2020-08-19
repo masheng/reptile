@@ -91,9 +91,9 @@ public class SXTXApp extends BookApp {
         String pageCout = pageCountUrl.substring(startIndex, pageCountUrl.lastIndexOf('/'));
         int count = Integer.parseInt(pageCout);
 
-        String cateMd5 = MD5Utils.strToMD5(task.desc);
-        scanInfoModel.cateInfo.put(cateMd5, new ScanInfoModel.ScanInfo(task.desc, count));
-        count = pageCountOff(count, cateMd5);
+        String cateMd5 = MD5Utils.strToMD5(task.cate);
+        scanInfoModel.cateInfo.put(cateMd5, new ScanInfoModel.ScanInfo(task.cate, count));
+        count = pageCountOff(count, cateMd5, task.url);
 
         for (int i = 2; i < count; i++) {
             TaskModel taskModel = createTask(LIST);
@@ -113,7 +113,7 @@ public class SXTXApp extends BookApp {
 
             TaskModel taskModel = createTask(CATEGORY);
             taskModel.url = url;
-            taskModel.desc = cateName;
+            taskModel.cate = cateName;
             addHttpTask(taskModel);
 
             if (D.DEBUG)

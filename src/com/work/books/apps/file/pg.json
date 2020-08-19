@@ -1,0 +1,61 @@
+[{
+  name: "传记",
+  tag: "0",
+  url: ""
+}, {
+  name: "科幻",
+  tag: "10",
+  url: ""
+}, {
+  name: "人人学编程",
+  tag: "2",
+  url: ""
+}, {
+  name: "小说",
+  tag: "9",
+  url: ""
+}, {
+  name: "设计",
+  tag: "3",
+  url: ""
+}, {
+  name: "多看",
+  tag: "4",
+  url: ""
+}, {
+  name: "历史",
+  tag: "5",
+  url: ""
+}, {
+  name: "语言类",
+  tag: "6",
+  url: ""
+}, {
+  name: "杂志",
+  tag: "8",
+  url: ""
+}, {
+  name: "文学",
+  tag: "7",
+  url: ""
+}, {
+  name: "漫画",
+  tag: "1",
+  url: ""
+}, {
+  name: "工具书",
+  tag: "12",
+  url: ""
+}, {
+  name: "金融类",
+  tag: "11",
+  url: ""
+}, {
+  name: "修身",
+  tag: "13",
+  url: ""
+}, {
+  name: "其他",
+  tag: "-1",
+  url: ""
+}]
