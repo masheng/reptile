@@ -79,7 +79,7 @@ public class ThreadUtils {
                 flag = 0;
 
 //            D.i(String.format("queue size:%d  thread count:%d  during s:%d", threadPool.getQueue().size(), threadPool.getActiveCount(), (System.currentTimeMillis() - time) / 1000));
-            log();
+//            log();
 
             try {
                 Thread.currentThread().sleep(10000);
@@ -100,7 +100,7 @@ public class ThreadUtils {
 
     public static class Config {
         public int DEFAULT_CORE_THREAD_SIZE = 20;
-        public int DEFAULT_QUEUE_MAX_SIZE = 5000;
+        public int DEFAULT_QUEUE_MAX_SIZE = 25000;
         public int DEFAULT_MAX_THREAD_SIZE = DEFAULT_CORE_THREAD_SIZE * 10;
     }
 

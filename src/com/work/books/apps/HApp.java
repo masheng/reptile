@@ -65,8 +65,16 @@ public class HApp extends BookAppTemp {
         parseList(task);
 
         Element countPageEle = task.resDoc.selectFirst("#__layout > div > div.container.body-content > div.category-wrapper.expand-body.content-wrapper > div > div.pagination-wrapper > ul > li.page-item.active > a");
-        String countStr = countPageEle.attr("aria-setsize");
-        int count = Integer.parseInt(countStr);
+        if (countPageEle == null)
+            return;
+        int count = 0;
+        try {
+            String countStr = countPageEle.attr("aria-setsize");
+            count = Integer.parseInt(countStr);
+        } catch (Exception e) {
+            D.e("==>" + task.toString());
+            e.printStackTrace();
+        }
 
         count = cateCount(task.cate, task.url, count);
 
@@ -74,6 +82,7 @@ public class HApp extends BookAppTemp {
             TaskModel taskModel = createTask(LIST);
             taskModel.cate = task.cate;
             taskModel.url = task.url + "?pageNumber=" + i;
+            taskModel.delayTime = 1500;
             addHttpTask(taskModel);
 
             if (D.DEBUG)
@@ -89,6 +98,7 @@ public class HApp extends BookAppTemp {
             taskModel.url = HOST + e.attr("href");
             taskModel.cate = task.cate;
             taskModel.testSite = true;
+            taskModel.delayTime = 1500;
             addHttpTask(taskModel);
 
             if (D.DEBUG)
@@ -100,6 +110,8 @@ public class HApp extends BookAppTemp {
     protected void parseInfo(TaskModel task) {
         InfoModel model = new InfoModel();
         Element bookNameEle = task.resDoc.selectFirst("#__layout > div > div.container.body-content > div.book-detail-wrapper.content-wrapper.expand-body > div > h5");
+        if (bookNameEle == null)
+            D.e("HApp  获取bookName失败==>" + task.url);
         String bookName = bookNameEle.text();
         parseName(model, bookName);
 
@@ -118,6 +130,7 @@ public class HApp extends BookAppTemp {
         if (headers.containsKey("referer"))
             headers.remove("referer");
         taskModel.headers = headers;
+        taskModel.delayTime = 1500;
         taskModel.requestType = HttpUtils.GET;
         taskModel.obj = code;
         taskModel.parse = false;

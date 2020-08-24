@@ -116,12 +116,18 @@ public class MNApp extends BookApp {
                 if (downUrl.contains("密码:")) {
                     savePan(downUrl.split("密码:"), task);
                     //书籍下载&在线阅读 https://pan.baidu.com/s/1y5iq9Akj2a2e3-XFaALgcg 提取码：kklp 微信关注“码中人”公众号，获取免费赠书。 本站的大部分电子书均为开源电子书。 本站不制作 、不存储该资源，所有资源来自于其它网站。 如本电子书非开源图书，请尊重版权，购买正版书籍 本电子版仅供预览，下载后24小时内务必删除。 PS:如果链接失效，请留言告知我们，将尽快修复链接。
-                } else if (downUrl.contains("提取码：")) {
+                } else if (downUrl.contains("密码："))
+                    savePan(downUrl.split("密码："), task);
+                else if (downUrl.contains("密码"))
+                    savePan(downUrl.split("密码"), task);
+                else if (downUrl.contains("提取码：")) {
                     savePan(downUrl.split("提取码："), task);
                 } else if (downUrl.contains("提取码:"))
                     savePan(downUrl.split("提取码:"), task);
-                else if (downUrl.contains("密码："))
-                    savePan(downUrl.split("密码："), task);
+                else if (downUrl.contains("提取码 ：")) {
+                    savePan(downUrl.split("提取码 ："), task);
+                } else if (downUrl.contains("提取码 :"))
+                    savePan(downUrl.split("提取码 :"), task);
             } else if (downEle.text().contains("公众号")) {
                 return;
             } else {

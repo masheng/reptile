@@ -166,7 +166,8 @@ public class PGApp extends BookAppTemp {
             task.infoModel.addDownModel(new DownModel(url, code, type));
         }
 
-        D.i("==>" + task.infoModel.toString());
+        if (D.DEBUG)
+            D.i("==>" + task.infoModel.toString());
 
         saveBook(task.infoModel);
     }

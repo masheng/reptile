@@ -48,9 +48,10 @@ public class SXTXApp extends BookApp {
             task.infoModel.addDownModel(new DownModel(url, url.startsWith(CTFILE) ? BookConstant.CTFILE_PAN : BookConstant.PRIVATE_PAN));
         }
 
-        saveBook(task.infoModel);
+        if (D.DEBUG)
+            D.i("书行天下==>" + task.infoModel.toString());
 
-        D.i("书行天下==>" + task.infoModel.toString());
+        saveBook(task.infoModel);
     }
 
     private void parseList(TaskModel task) {
@@ -61,8 +62,13 @@ public class SXTXApp extends BookApp {
 
             InfoModel model = new InfoModel();
             model.bookName = bookName;
-            if (bookName.contains("《")) {
+            model.pageUrl = url;
+            if (bookName.contains("《") && bookName.contains("》")) {
                 model.bookName = StrUtils.subStr(bookName, "《", "》", true);
+            } else if (bookName.contains("PDF")) {
+                model.bookName = bookName.substring(0, bookName.indexOf("PDF"));
+                if (model.bookName.contains("《"))
+                    model.bookName.replace("《", "");
             }
             if (bookName.contains("PDF")) {
                 model.bookFormat = BookConstant.F_PDF;
@@ -86,7 +92,13 @@ public class SXTXApp extends BookApp {
         parseList(task);
         //获取总页数
         Elements pageEles = task.resDoc.select("#primary > div > nav.navigation.pagination > div > a");
-        String pageCountUrl = pageEles.get(pageEles.size() - 2).attr("href");
+        String pageCountUrl = "";
+        try {
+            pageCountUrl = pageEles.get(pageEles.size() - 2).attr("href");
+        } catch (Exception e) {
+            D.e("==>" + task.toString());
+            e.printStackTrace();
+        }
         int startIndex = pageCountUrl.lastIndexOf("page/") + "page/".length();
         String pageCout = pageCountUrl.substring(startIndex, pageCountUrl.lastIndexOf('/'));
         int count = Integer.parseInt(pageCout);
@@ -109,6 +121,10 @@ public class SXTXApp extends BookApp {
         Elements cateEles = task.resDoc.select("#site-nav > div > ul > li:not(:first-child) > a");
         for (Element cate : cateEles) {
             String url = cate.attr("href");
+            //排除视频教程
+            if (url.contains("spjc"))
+                break;
+
             String cateName = cate.text();
 
             TaskModel taskModel = createTask(CATEGORY);

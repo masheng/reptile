@@ -7,6 +7,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 
 public class jb51App extends BookApp {
@@ -82,7 +83,6 @@ public class jb51App extends BookApp {
         //解析页码
         Elements pageEless = taskModel.resDoc.select("div.dxypage > div.plist > a:last-child");
         if (pageEless.isEmpty()) {
-            D.e(SITE + "  解析页码失败==>" + taskModel.url);
             return;
         }
         String lastPageUrl = pageEless.get(pageEless.size() - 1).attr("href");
@@ -116,10 +116,8 @@ public class jb51App extends BookApp {
             if (BookDBUtls.testSaveSiteInfo(taskModel.url))
                 addHttpTask(taskModel);
 
-            if (index++ == 2)
+            if (D.DEBUG && index++ == 2)
                 break;
-//            if (D.DEBUG)
-//                break;
         }
     }
 
@@ -129,10 +127,16 @@ public class jb51App extends BookApp {
         model.pageUrl = taskModel.url;
         //获取书名
         Element name = doc.getElementById("soft-name");
+        String bookName = "";
         if (name == null)
-            model.bookName = "";
+            return;
         else
-            model.bookName = name.getElementsByTag("h1").get(0).text();
+            bookName = name.getElementsByTag("h1").get(0).text();
+        try {
+            model.bookName = new String(bookName.getBytes("GBK"), "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
         //类别
         Elements infos = doc.select("#param-content li.r");
@@ -171,6 +175,9 @@ public class jb51App extends BookApp {
             DownModel downloadUrl = new DownModel(url, code, urlType);
             model.downModel.add(downloadUrl);
         }
+
+        if (D.DEBUG)
+            D.i("==>" + model);
 
         saveBook(model);
     }

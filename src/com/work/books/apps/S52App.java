@@ -67,6 +67,7 @@ public class S52App extends BookAppTemp {
             taskModel.requestType = HttpUtils.POST;
             taskModel.headers = headers;
             taskModel.params = params;
+            taskModel.delayTime = 2000;
 
             String title = e.text();
             InfoModel infoModel = new InfoModel();
@@ -84,12 +85,18 @@ public class S52App extends BookAppTemp {
     @Override
     protected void parseInfo(TaskModel task) {
         Element downEle = task.resDoc.selectFirst("body > section > div.content-wrap > div > article a.dl");
+        if (downEle == null)
+            downEle = task.resDoc.selectFirst("body > section > div.content-wrap > div > article > dl > dd > p > a");
+
         String url = "", code = "";
         if (downEle != null) {
             url = downEle.attr("href");
             String codeStr = downEle.text();
             if (codeStr.contains("密码") || codeStr.contains("提取码")) {
-                codeStr = codeStr.split("：")[1].trim();
+                if (codeStr.contains("："))
+                    codeStr = codeStr.split("：")[1].trim();
+                else if (codeStr.contains(":"))
+                    codeStr = codeStr.split(":")[1].trim();
                 code = codeStr.substring(0, 4);
             }
         } else {
@@ -112,7 +119,8 @@ public class S52App extends BookAppTemp {
             panType = BookConstant.CHANG_PAN;
         task.infoModel.addDownModel(new DownModel(url, code, panType));
 
-        D.i("==>" + task.infoModel.toString());
+        if (D.DEBUG)
+            D.i("==>" + task.infoModel.toString());
 
         saveBook(task.infoModel);
 //        }
@@ -126,22 +134,16 @@ public class S52App extends BookAppTemp {
         }
 
         Element downEle = task.resDoc.selectFirst("iframe.ifr2");
-        String sign = downEle.attr("src");
+        if (downEle != null) {
+            String sign = downEle.attr("src");
 
-        TaskModel taskModel = createTask(DOWN1);
-        taskModel.headers = headers;
-        //Host	52sharing.lanzous.com
-        taskModel.url = "https://52sharing.lanzous.com" + sign;
-        taskModel.infoModel = task.infoModel;
-        addHttpTask(taskModel);
-
-//
-//        int panType = task.url.contains("lanzous") ? BookConstant.LZ_PAN : BookConstant.PRIVATE_PAN;
-//        task.infoModel.addDownModel(new DownModel(url, panType));
-//
-//        D.i("==>" + task.infoModel.toString());
-//
-//        saveBook(task.infoModel);
+            TaskModel taskModel = createTask(DOWN1);
+            taskModel.headers = headers;
+            //Host	52sharing.lanzous.com
+            taskModel.url = "https://52sharing.lanzous.com" + sign;
+            taskModel.infoModel = task.infoModel;
+            addHttpTask(taskModel);
+        }
     }
 
     private void parseDown1(TaskModel task) {
@@ -167,7 +169,7 @@ public class S52App extends BookAppTemp {
     private void parseDown2(TaskModel task) {
         JSONObject obj = new JSONObject(task.response);
         String url = obj.getString("dom") + "/com/work/books/apps/file/" + obj.getString("url");
-        D.ee(task.infoModel.pageUrl + "   d url==>" + url);
+//        D.ee(task.infoModel.pageUrl + "   d url==>" + url);
     }
 
     @Override
@@ -188,6 +190,7 @@ public class S52App extends BookAppTemp {
             return;
 
         TaskModel taskModel = createTask(LIST);
+        taskModel.delayTime = 2000;
         int pageIndex = index.getAndIncrement();
         if (pageIndex == 1)
             taskModel.url = "https://52sharing.cn/category/book";

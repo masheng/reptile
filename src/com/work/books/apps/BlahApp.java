@@ -50,7 +50,9 @@ public class BlahApp extends BookApp {
             model.bookName = name;
             model.bookFormat = format;
             model.addDownModel(new DownModel(BASE_URL + downUrl));
-//            D.i("blah==>" + model.toString());
+
+            if (D.DEBUG)
+                D.i("blah==>" + model.toString());
 
             saveBook(model);
         }

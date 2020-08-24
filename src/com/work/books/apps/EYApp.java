@@ -6,6 +6,8 @@ import com.work.books.utils.*;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.sql.Struct;
+
 //风陵渡书屋
 public class EYApp extends BookApp {
     public static void main(String[] args) {
@@ -80,32 +82,66 @@ public class EYApp extends BookApp {
 
     private void parseInfo(TaskModel task) {
         Element infoEle = task.resDoc.selectFirst("#wrapper > div > section > div > div.book-introduce > div.book-profile > div.exp");
+        Element imgEle = task.resDoc.selectFirst("#wrapper > div > section > div > div.book-introduce > div.book-profile > div.thumb > img");
+        String imgUrl = imgEle.attr("href");
 
         String bookName = infoEle.selectFirst("h1").text();
         //<h1>朱元璋传【吴晗】eybook.com</h1>
-        if (bookName.contains("【")) {
+        if (bookName.contains("【") && !bookName.startsWith("【")) {
             bookName = bookName.substring(0, bookName.indexOf("【")).trim();
         }
+
+        bookName = bookName.replace("eybook.com", "");
+        if (bookName.contains("【"))
+            bookName = bookName.replace("【", "");
+        if (bookName.contains("】"))
+            bookName = bookName.replace("】", "");
+        if (bookName.contains("》"))
+            bookName = StrUtils.subStr(bookName, "《", "》", true);
+        if (bookName.contains("pdf"))
+            bookName = bookName.substring(0, bookName.indexOf("pdf"));
+
         String bookAuthor = "";
         Elements proEles = infoEle.select("dl.property > dd");
-        for (Element e : proEles) {
-            if (e.text().contains("作者")) {
-                bookAuthor = e.text().split("：")[1];
-            }
+        try {
+            for (Element e : proEles)
+                if (e.text().contains("作者")) {
+                    String[] author = e.text().split("：");
+                    if (author.length == 2)
+                        bookAuthor = author[1];
+                }
+        } catch (Exception e) {
+            D.e("==>" + task.toString());
+            e.printStackTrace();
         }
 
         InfoModel infoModel = new InfoModel();
         infoModel.pageUrl = task.url;
         infoModel.bookName = bookName;
         infoModel.bookAuthor = bookAuthor;
+        infoModel.bookImg = imgUrl;
 
         Elements downEles = task.resDoc.select("#d > div.main > div.book-download > dl.less > dd > label");
         String downUrl = downEles.get(0).text();
         infoModel.bookFormat = downEles.get(1).text();
+        if (!StrUtils.isEmpty(infoModel.bookFormat) && infoModel.bookFormat.contains("|")) {
+            String[] formats = infoModel.bookFormat.split("|");
+            StringBuilder sb = new StringBuilder();
+            for (String str : formats)
+                if (StrUtils.isEmpty(str)) {
+                    sb.append(str.trim());
+                    sb.append("/");
+                }
+            infoModel.bookFormat = sb.toString();
+        }
+
         String code = downEles.get(2).text();
         //<a href="https://pan.baidu.com/s/1HnwUdia1F-qfps9tEN_fUQ " target="_blank">点击下载</a>
         int type = downUrl.contains("pan.baidu") ? BookConstant.BAIDU_PAN : BookConstant.PRIVATE_PAN;
         infoModel.addDownModel(new DownModel(downUrl, code, type));
+
+        if (D.DEBUG)
+            D.i("==>" + infoModel.toString());
 
         saveBook(infoModel);
     }

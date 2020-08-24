@@ -98,7 +98,7 @@ public class BLApp extends BookAppTemp {
             infoModel.addDownModel(new DownModel(url));
 
             if (D.DEBUG)
-                D.i("==>" + infoModel.toString());
+                D.i("BL==>" + infoModel.toString());
 
             saveBook(infoModel);
         }

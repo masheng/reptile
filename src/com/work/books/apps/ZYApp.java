@@ -108,15 +108,22 @@ public class ZYApp extends BookApp {
             String downUrl = url.attr("href");
             String name = url.attr("title");
             model.bookName = name;
-            if (name.contains("《")) {
-                model.bookName = name.substring(name.indexOf("《") + 1, name.indexOf("》"));
+            try {
+                if (name.contains("《")) {
+                    model.bookName = name.substring(name.indexOf("《") + 1, name.indexOf("》"));
+                }
+            } catch (Exception e) {
+                D.e("==>" + task.toString());
+                e.printStackTrace();
             }
             if (name.contains("[")) {
                 model.bookFormat = name.substring(name.lastIndexOf("[") + 1, name.lastIndexOf("]"));
             }
             model.addDownModel(new DownModel(downUrl, downUrl.startsWith(CTFILE) ? BookConstant.CTFILE_PAN : BookConstant.PRIVATE_PAN));
 
-            D.i("info==>" + model.toString());
+            if (D.DEBUG)
+                D.i("ZY==>" + model.toString());
+
             saveBook(model);
         }
     }

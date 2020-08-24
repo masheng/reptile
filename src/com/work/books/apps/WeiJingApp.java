@@ -51,7 +51,7 @@ public class WeiJingApp extends BookApp {
         scanInfoModel.cateInfo.put(DEFAULT_SCAN_CATE, new ScanInfoModel.ScanInfo(DEFAULT_SCAN_CATE, count));
         count = pageCountOff(count, DEFAULT_SCAN_CATE, task.url);
 
-        for (int i = 2; i <= count; i++) {
+        for (int i = 2; i < count; i++) {
             TaskModel taskModel = createTask(LIST);
             taskModel.url = String.format("https://vikingcabin.com/category/pdf/page/%d/?price=all", i + 1);
             addHttpTask(taskModel);
@@ -79,24 +79,37 @@ public class WeiJingApp extends BookApp {
     private void parseInfo(TaskModel task) {
         Document doc = task.resDoc;
         Elements urls = doc.select("body > section.container > div.content-wrap > div > article > p > a");
+        Element nameEle = doc.selectFirst("#focsbox-true > header > h1");
+        String bookName = nameEle.text();
+
         InfoModel model = new InfoModel();
         model.pageUrl = task.url;
 //<span style="font-size: 18pt;">点击下载：中华文明历史长卷：自是林泉多蕴藉(园林卷) PDF下载</span>
+
+        if (bookName.startsWith("[")) {
+            model.bookName = StrUtils.subStr(bookName, "[", "]", true);
+        } else if (bookName.contains("[")) {
+            model.bookName = bookName.substring(0, bookName.indexOf("["));
+            model.bookAuthor = StrUtils.subStr(bookName, "[", "]", true);
+        }
+        if (StrUtils.isEmpty(model.bookName))
+            model.bookName = bookName.substring(0, bookName.indexOf("PDF下载"));
+        if (StrUtils.isEmpty(model.bookName))
+            model.bookName = bookName;
+
+        if (bookName.contains("PDF"))
+            model.bookFormat = BookConstant.F_PDF;
+
         for (int i = urls.size() - 1; i >= 0; i--) {
             Element u = urls.get(i);
             String name = u.text();
             String url = u.attr("href");
             model.addDownModel(new DownModel(url, url.startsWith(CTFILE) ? BookConstant.CTFILE_PAN : BookConstant.PRIVATE_PAN));
-
-            if (name.contains("点击下载")) {
-                model.bookName = StrUtils.subStr(name, "点击下载：", "PDF下载", true).trim();
-                if (name.contains("PDF"))
-                    model.bookFormat = BookConstant.F_PDF;
-                break;
-            }
+            break;
         }
 
-        D.i("wj==>" + model.toString());
+        if (D.DEBUG)
+            D.i("wj==>" + model.toString());
 
         saveBook(model);
     }

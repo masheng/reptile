@@ -61,9 +61,18 @@ public class YunHaiApp extends BookApp {
     private void parseCate(TaskModel task) {
         parseList(task);
 
-        String pageEle = task.resDoc.selectFirst("#pagenavi > span.pages").text();
-        String pageCount = pageEle.substring(pageEle.lastIndexOf("共") + 1, pageEle.lastIndexOf("页"));
-        int count = Integer.parseInt(pageCount);
+        int count = 0;
+        try {
+            Element pageEle = task.resDoc.selectFirst("#pagenavi > span.pages");
+            if (pageEle == null)
+                return;
+            String pageCountStr = pageEle.text();
+            String pageCount = pageCountStr.substring(pageCountStr.lastIndexOf("共") + 1, pageCountStr.lastIndexOf("页"));
+            count = Integer.parseInt(pageCount);
+        } catch (Exception e) {
+            D.e("==>" + task.toString());
+            e.printStackTrace();
+        }
 
         String cateMd5 = MD5Utils.strToMD5(task.cate);
         scanInfoModel.cateInfo.put(cateMd5, new ScanInfoModel.ScanInfo(task.cate, count));
@@ -106,8 +115,8 @@ public class YunHaiApp extends BookApp {
         task.infoModel.pageUrl = task.url;
 
         for (int i = downEles.size() - 1; i >= 0; i--) {
-            if (downEles.get(i).text().contains("点击下载")) {
-                Element downInfoEle = downEles.get(i).selectFirst("span > a");
+            Element downInfoEle = downEles.get(i).selectFirst("span > a");
+            if (downInfoEle != null) {
                 String downUrl = downInfoEle.attr("href");
                 task.infoModel.addDownModel(new DownModel(downUrl, downUrl.startsWith(CTFILE) ? BookConstant.CTFILE_PAN : BookConstant.PRIVATE_PAN));
 
@@ -123,7 +132,8 @@ public class YunHaiApp extends BookApp {
             }
         }
 
-        D.i("云海==>" + task.infoModel.toString());
+        if (D.DEBUG)
+            D.i("云海==>" + task.infoModel.toString());
 
         saveBook(task.infoModel);
     }

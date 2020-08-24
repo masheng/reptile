@@ -118,7 +118,9 @@ public class TYKApp extends BookApp {
         task.infoModel.pageUrl = task.url;
         task.infoModel.addDownModel(new DownModel(downUrl, downUrl.startsWith(CTFILE)
                 ? BookConstant.CTFILE_PAN : BookConstant.PRIVATE_PAN));
-        D.ee("downUrl==>" + downUrl);
+
+        if (D.DEBUG)
+            D.i("downUrl==>" + task.infoModel);
 
         saveBook(task.infoModel);
     }

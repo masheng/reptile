@@ -53,6 +53,8 @@ public class InfoModel implements Cloneable {
                 ", bookAuthor='" + bookAuthor + '\'' +
                 ", bookType='" + bookType + '\'' +
                 ", bookFormat='" + bookFormat + '\'' +
+                ", bookImg='" + bookImg + '\'' +
+                ", bookDesc='" + bookDesc + '\'' +
                 ", password='" + password + '\'' +
                 '}';
     }

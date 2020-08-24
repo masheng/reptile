@@ -64,6 +64,7 @@ public class QQSZApp extends BookAppTemp {
             TaskModel taskModel = createTask(LIST);
             taskModel.url = task.url + "/page/" + i;
             taskModel.cate = task.cate;
+            taskModel.delayTime = 1500;
             addHttpTask(taskModel);
 
             if (D.DEBUG)
@@ -81,17 +82,22 @@ public class QQSZApp extends BookAppTemp {
             InfoModel infoModel = new InfoModel();
 
             String[] formats = testFormat(title);
-            if (StrUtils.isEmpty(formats[1]))
-                infoModel.bookName = title.trim();
-            else
-                infoModel.bookName = title.substring(0, title.indexOf(formats[1])).trim();
-
+            try {
+                if (StrUtils.isEmpty(formats[1]))
+                    infoModel.bookName = title.trim();
+                else
+                    infoModel.bookName = title.substring(0, title.toLowerCase().indexOf(formats[1])).trim();
+            } catch (Exception ex) {
+                D.e("==>" + task.toString());
+                ex.printStackTrace();
+            }
             infoModel.bookFormat = formats[0];
             infoModel.bookType = task.cate;
             infoModel.pageUrl = url;
 
             TaskModel taskModel = createTask(INFO);
             taskModel.url = url;
+            taskModel.delayTime = 1500;
             taskModel.infoModel = infoModel;
             taskModel.testSite = true;
             addHttpTask(taskModel);
@@ -107,6 +113,7 @@ public class QQSZApp extends BookAppTemp {
         String url = downEle.attr("href");
         TaskModel taskModel = createTask(DOWN);
         taskModel.url = url;
+        taskModel.delayTime = 1500;
         taskModel.infoModel = task.infoModel;
         addHttpTask(taskModel);
     }

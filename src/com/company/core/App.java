@@ -14,9 +14,9 @@ public abstract class App {
     protected ThreadUtils threadUtils = new ThreadUtils();
 
     public boolean addHttpTask(TaskModel model) {
-        if (model.testSite)
-            if (!BookDBUtls.testSaveSiteInfo(model.url))
-                return true;
+//        if (model.testSite)
+//            if (!BookDBUtls.testSaveSiteInfo(model.url))
+//                return true;
         return threadUtils.addTask(model);
     }
 

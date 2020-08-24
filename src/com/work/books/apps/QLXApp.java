@@ -69,7 +69,8 @@ public class QLXApp extends BookAppTemp {
             infoModel.bookAuthor = obj.get("bookauthor").getAsString();
             infoModel.addDownModel(new DownModel(obj.get("bookurl").getAsString()));
 
-            D.i("==>" + infoModel.toString());
+            if (D.DEBUG)
+                D.i("==>" + infoModel.toString());
             saveBook(infoModel);
 
             if (D.DEBUG)

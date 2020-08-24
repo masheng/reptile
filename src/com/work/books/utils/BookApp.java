@@ -42,7 +42,7 @@ public abstract class BookApp extends App {
             return currentCount;
 
         if (currentCount <= 0)
-            D.e(String.format("cate:%d  pageCount:%d  url:%s", cate, currentCount, url));
+            D.e(String.format("cate:%s  pageCount:%d  url:%s", cate, currentCount, url));
 
         int scanCount = currentCount;
         int lastPage = 0;
@@ -77,7 +77,7 @@ public abstract class BookApp extends App {
     protected void saveBook(InfoModel model) {
         if (model.save()) {
             scanInfoModel.bookAdd.incrementAndGet();
-//            D.i("保存电子书成功:" + model.toString());
+            D.i("保存电子书成功:" + model.toString());
         } else
             D.e("保存电子书数据失败:" + model.toString());
     }

@@ -53,7 +53,7 @@ public class SSYLApp extends BookApp {
         for (int i = 2; i <= count; i++) {
             TaskModel taskModel = createTask(LIST);
             taskModel.url = "http://www.ssylu.com/page/" + i;
-            D.i("home==>" + taskModel.url);
+//            D.i("home==>" + taskModel.url);
             addHttpTask(taskModel);
 
             if (i == 4)
@@ -63,7 +63,6 @@ public class SSYLApp extends BookApp {
 
     //<a href="http://www.ssylu.com/archives/19635" title="《土狼星》艾伦·斯蒂尔.pdf">《土狼星》艾伦·斯蒂尔.pdf</a>
     private void parseList(TaskModel task) {
-        D.i("parseList==>" + task.url);
         Elements listEle = task.resDoc.select("#primary > ul > li > div.content > h2 > a");
         for (Element item : listEle) {
             String url = item.attr("href");
@@ -73,7 +72,11 @@ public class SSYLApp extends BookApp {
             String title = item.text();
             InfoModel infoModel = new InfoModel();
 
-            infoModel.bookName = StrUtils.subStr(title, "《", "》", true);
+            if (title.contains("《"))
+                infoModel.bookName = StrUtils.subStr(title, "《", "》", true);
+            else
+                infoModel.bookName = title;
+
             if (title.contains("."))
                 infoModel.bookFormat = title.substring(title.lastIndexOf(".") + 1);
             if (title.contains("》"))
@@ -99,7 +102,8 @@ public class SSYLApp extends BookApp {
         task.infoModel.addDownModel(new DownModel(downUrl, downUrl.startsWith(CTFILE)
                 ? BookConstant.CTFILE_PAN : BookConstant.PRIVATE_PAN));
 
-        D.i("ssyl==>" + task.infoModel.toString());
+        if (D.DEBUG)
+            D.i("ssyl==>" + task.infoModel.toString());
 
         saveBook(task.infoModel);
     }

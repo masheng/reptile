@@ -3,9 +3,13 @@ use reptile_book;
 
 CREATE TABLE IF NOT EXISTS `book` (
   `id` int NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  `bookName` varchar(200) NOT NULL default '',
-  `bookFormat`  varchar(29) NOT NULL default '',
-  `downloadUrl` varchar(5000) NOT NULL default '',  /*下载url地址 格式:{"网盘类型||提取码||url",...}  以||分割*/
+  `bookName` varchar(500) NOT NULL default '',
+  `bookAuthor` varchar(200) NOT NULL default '',
+  `bookType` varchar(200) NOT NULL default '',
+  `bookFormat`  varchar(200) NOT NULL default '',
+  `bookImg`  varchar(300) NOT NULL default '',
+  `bookDesc`  varchar(5000) NOT NULL default '',
+  `downloadUrl` varchar(8000) NOT NULL default '',  /*下载url地址 格式:{"网盘类型||提取码||url",...}  以||分割*/
   `pageUrl` varchar(500) NOT NULL default '',       #原始页面地址
   `insertTime` TIMESTAMP,                           #第一次插入时的时间
   `info` varchar(500),
@@ -25,7 +29,7 @@ CREATE TABLE IF NOT EXISTS `scan_info` (
   `id` int NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `site` varchar(50) NOT NULL default '',
   `bookAdd` int,
-  `cateInfo` varchar(1000) NOT NULL default '',
+  `cateInfo` varchar(3000) NOT NULL default '',
   `insertTime` TIMESTAMP,                         #开始扫描的时间
   `duration` int       #扫描花费的时间
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -41,6 +45,7 @@ CREATE TABLE IF NOT EXISTS `repetition` (
   `insertTime` TIMESTAMP                         #扫描的时间
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+use reptile_book;
 delete from book;
 delete from scan_info;
 delete from repetition;

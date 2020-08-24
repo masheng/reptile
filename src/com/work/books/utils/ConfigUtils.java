@@ -5,4 +5,5 @@ public class ConfigUtils {
     public static final String DZS_CODE = "004005";
     //S52App的code
     public static final String S52_CODE = "798";
+    public static final String PDF80_CODE = "8080";
 }

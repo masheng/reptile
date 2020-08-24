@@ -62,5 +62,22 @@ public class TaskModel {
     public transient String errMsg;
 
     //执行一个任务前 延迟的时间 防止过于频繁的请求 ms
-    public int delayTime = 0;
+    public int delayTime = 3000;
+
+    @Override
+    public String toString() {
+        return "TaskModel{" +
+                "reTryConnCount=" + reTryConnCount +
+                ", reTryReadCount=" + reTryReadCount +
+                ", reTryMaxCount=" + reTryMaxCount +
+                ", parse=" + parse +
+                ", tag='" + tag + '\'' +
+                ", cate='" + cate + '\'' +
+                ", obj='" + obj + '\'' +
+                ", url='" + url + '\'' +
+                ", resEncode='" + resEncode + '\'' +
+                ", errCode=" + errCode +
+                ", errMsg='" + errMsg + '\'' +
+                '}';
+    }
 }

@@ -28,16 +28,16 @@ public class BookDBUtls {
      * 插入书数据
      */
     public static boolean insertBook(InfoModel model) {
-        String sql = "insert into book(bookName, bookFormat, downloadUrl" +
+        String sql = "insert into book(bookName, bookAuthor, bookType, bookFormat, bookImg, bookDesc, downloadUrl" +
                 ", pageUrl, insertTime) " +
-                "values(?,?,?," +
+                "values(?,?,?,?,?,?,?," +
                 "?,?)";
         PreparedStatement state = null;
 
         if (StrUtils.isEmpty(model.bookName)) {
             D.e("bookName空 url==>" + model.pageUrl);
         }
-        if(model.pageUrl.length() >= 1000) {
+        if (model.pageUrl.length() >= 1000) {
             D.e("页面链接过长==>" + model.pageUrl);
             model.pageUrl = "too long";
         }
@@ -52,16 +52,23 @@ public class BookDBUtls {
                 bookFormat = BookConstant.F_UNKNOW;
 
             state = DatabaseUtils.getConn(BookConstant.DATA_BASE).prepareStatement(sql);
+            if (model.bookName.contains("'"))
+                model.bookName = model.bookName.replace("'", "\'");
             state.setString(1, model.bookName);
-            state.setString(2, bookFormat.toLowerCase());
-            state.setString(3, downUlr);
-            state.setString(4, model.pageUrl);
-            state.setTimestamp(5, getTimestamp());
+            state.setString(2, model.bookAuthor);
+            state.setString(3, model.bookType);
+            state.setString(4, bookFormat.toLowerCase());
+            state.setString(5, model.bookImg);
+            state.setString(6, model.bookDesc);
+            state.setString(7, downUlr);
+            state.setString(8, model.pageUrl);
+            state.setTimestamp(9, getTimestamp());
 
             int ret = state.executeUpdate();
             if (ret > 0)
                 return true;
         } catch (SQLException e) {
+            D.e("==>" + model.toString());
             e.printStackTrace();
         } finally {
             if (state != null) {
@@ -154,7 +161,9 @@ public class BookDBUtls {
         ResultSet res = null;
         try {
             state = DatabaseUtils.getConn(BookConstant.DATA_BASE).createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-            String sql = String.format("SELECT id FROM book WHERE bookName = '%s' AND bookFormat = '%s'", bookName, bookFormat.toLowerCase());
+            if (bookName.contains("'"))
+                bookName = bookName.replace("'", "\'");
+            String sql = String.format("SELECT id FROM book WHERE bookName = '%s' AND bookFormat like '%%%s%%'", bookName, bookFormat.toLowerCase());
             res = state.executeQuery(sql);
             if (res.next()) {
                 int id = res.getInt("id");
@@ -188,7 +197,7 @@ public class BookDBUtls {
                 if (StrUtils.isEmpty(scanInfo))
                     return null;
 
-                D.i("info==>" + scanInfo);
+//                D.i("info==>" + scanInfo);
                 Type founderSetType = new TypeToken<Map<String, ScanInfoModel.ScanInfo>>() {
                 }.getType();
                 return gson.fromJson(scanInfo, founderSetType);
@@ -248,8 +257,9 @@ public class BookDBUtls {
 
     /**
      * 根据url查表 如果存在 则返回false 否则加入repetition表
+     *
      * @return true 没有记录 false 已经请求过
-     * */
+     */
     public static boolean testSaveSiteInfo(String site) {
         if (D.DEBUG)
             return true;
@@ -304,7 +314,7 @@ public class BookDBUtls {
                 if (StrUtils.isEmpty(scanInfo))
                     return false;
 
-                D.i("info==>" + scanInfo);
+//                D.i("info==>" + scanInfo);
                 if (scanInfo.equals(site))
                     return true;
             }

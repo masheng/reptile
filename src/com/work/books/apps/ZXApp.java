@@ -140,7 +140,8 @@ public class ZXApp extends BookApp {
             task.infoModel.addDownModel(new DownModel(url));
         }
 
-        D.i("info==>" + task.infoModel.toString());
+        if (D.DEBUG)
+            D.i("ZX==>" + task.infoModel.toString());
 
         saveBook(task.infoModel);
     }

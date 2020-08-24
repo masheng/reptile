@@ -2,10 +2,6 @@ package com.work.books.apps;
 
 import com.company.core.model.TaskModel;
 import com.work.books.utils.BookApp;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-
-import java.io.IOException;
 
 public abstract class BookAppTemp extends BookApp {
 

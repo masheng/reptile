@@ -6,7 +6,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 
 public class D {
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
 
     private static Map<String, Logger> loggerMap = new HashMap<String, Logger>();
 

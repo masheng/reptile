@@ -140,7 +140,8 @@ public class DZSApp extends BookAppTemp {
             }
         }
 
-        D.i("==>" + infoModel.toString());
+        if (D.DEBUG)
+            D.i("==>" + infoModel.toString());
 
         saveBook(infoModel);
     }

@@ -3,15 +3,8 @@ package com.company.core.utils;
 import com.company.core.model.TaskModel;
 import org.jsoup.Jsoup;
 
-import java.io.FileInputStream;
-import java.security.*;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import javax.net.ssl.*;
-
 import java.io.*;
 import java.net.*;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
@@ -64,8 +57,8 @@ public class HttpUtils {
             httpUrlConnection.setDoOutput(true);
             httpUrlConnection.setDoInput(true);
             httpUrlConnection.setUseCaches(false);
-            httpUrlConnection.setConnectTimeout(70000);
-            httpUrlConnection.setReadTimeout(8000);
+            httpUrlConnection.setConnectTimeout(15000);
+            httpUrlConnection.setReadTimeout(10000);
 
             if (task.headers != null && task.headers.size() > 0)
                 for (Map.Entry<String, String> entry : task.headers.entrySet())
@@ -193,6 +186,8 @@ public class HttpUtils {
             task.errMsg = "HttpUtils  getText catch an exception ==>" + e.getLocalizedMessage();
             task.errCode = ErrorCode.READ_ERR;
             task.app.onFailed(task);
+
+            e.printStackTrace();
 //            task.app.addHttpTask(task);
         }
 

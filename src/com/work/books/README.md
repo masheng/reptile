@@ -1,5 +1,6 @@
 ##### 已知网盘
 https://n802.com/dir/7823036-11625293-090948
+https://www.taoshudang.com/51286.html
 
 jb51:       脚本之家  https://www.jb51.net/books/
 weijing:    维京小屋    https://vikingcabin.com/
@@ -10,7 +11,7 @@ wei_bai_yue 微百阅 http://www.weibaiyue.com
 yun_hai     云海  http://www.pdfbook.cn
 sxtx        书行天下 https://www.sxpdf.com
 blah        https://blah.me
---hui         汇书  https://www.booksgather.com
+hui         汇书  https://www.booksgather.com
 ssyl        书山有路  http://www.ssylu.com
 JJCS        精校藏书  https://jingjiaocangshu.cn
 WZ          丸子学英语   https://www.wanzi.pw

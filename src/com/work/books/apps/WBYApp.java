@@ -64,12 +64,20 @@ public class WBYApp extends BookApp {
         parseList(task);
 
         //获取总页数 然后组装url
-        int count;
-        Elements pageEle = task.resDoc.select("body > div.liebiaoye > div.liebiaoye-left > a:last-child");
-        String lastUrl = pageEle.get(0).attr("href");
-        //<a href="/jiaoyu/index_34.html">尾页</a>
-        String pageCount = lastUrl.substring(lastUrl.lastIndexOf('_') + 1, lastUrl.lastIndexOf('.'));
-        count = Integer.parseInt(pageCount);
+        int count = 0;
+        try {
+            Elements pageEle = task.resDoc.select("body > div.liebiaoye > div.liebiaoye-left > a:last-child");
+            if (pageEle.isEmpty())
+                return;
+
+            String lastUrl = pageEle.get(0).attr("href");
+            //<a href="/jiaoyu/index_34.html">尾页</a>
+            String pageCount = lastUrl.substring(lastUrl.lastIndexOf('_') + 1, lastUrl.lastIndexOf('.'));
+            count = Integer.parseInt(pageCount);
+        } catch (Exception e) {
+            D.e("==>" + task.toString());
+            e.printStackTrace();
+        }
 
         String cateMd5 = MD5Utils.strToMD5(task.cate);
         scanInfoModel.cateInfo.put(cateMd5, new ScanInfoModel.ScanInfo(task.cate, count));
@@ -128,7 +136,8 @@ public class WBYApp extends BookApp {
 
         model.addDownModel(new DownModel(downUrl, downUrl.startsWith(CTFILE) ? BookConstant.CTFILE_PAN : BookConstant.PRIVATE_PAN));
 
-        D.i("微百阅==>" + model.toString());
+        if (D.DEBUG)
+            D.i("微百阅==>" + model.toString());
         saveBook(model);
     }
 }

@@ -90,6 +90,9 @@ public class WZApp extends BookApp {
             infoModel.bookFormat = bookFormat;
             infoModel.addDownModel(new DownModel(url, url.startsWith(CTFILE) ? BookConstant.CTFILE_PAN : BookConstant.PRIVATE_PAN));
 
+            if (D.DEBUG)
+                D.i("WZ==>" + infoModel);
+
             saveBook(infoModel);
 
             if (D.DEBUG)

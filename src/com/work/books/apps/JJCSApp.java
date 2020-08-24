@@ -158,11 +158,13 @@ public class JJCSApp extends BookApp {
         }
         //解析下载地址
         Elements downEles = task.resDoc.select("body > div.wrap > div.content > div.plus_box > div.panel > div.panel-body > span.downfile > a");
-        for (Element e : downEles)
-            infoModel.addDownModel(new DownModel(e.text(), e.text().startsWith(CTFILE)
+        for (Element e : downEles) {
+            String url = e.attr("href");
+            infoModel.addDownModel(new DownModel(url, url.contains(CTFILE)
                     ? BookConstant.CTFILE_PAN : BookConstant.PRIVATE_PAN));
-
-        D.i("==>" + infoModel.toString());
+        }
+        if (D.DEBUG)
+            D.i("==>" + infoModel.toString());
 
         saveBook(infoModel);
     }

@@ -141,8 +141,8 @@ public class EBLApp extends BookAppTemp {
     protected void parseDown(TaskModel task) {
         if (task.redirect) {
             task.infoModel.addDownModel(new DownModel(task.redirectUrl, task.redirectUrl.contains(CTFILE) ? BookConstant.CTFILE_PAN : BookConstant.PRIVATE_PAN));
-
-            D.i("==>" + task.infoModel.toString());
+            if (D.DEBUG)
+                D.i("==>" + task.infoModel.toString());
             saveBook(task.infoModel);
         } else {
             D.e("保存下载地址失败 ==>" + task.infoModel.toString());

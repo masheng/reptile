@@ -1,10 +1,14 @@
-package com.work.books.apps;
+package com.work.books.give_up;
 
 import com.company.core.model.TaskModel;
 import com.company.core.utils.D;
+import com.company.core.utils.HttpUtils;
 import com.work.books.utils.BookApp;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+
+import java.util.HashMap;
+import java.util.Map;
 
 //http://moreread.me
 public class RMApp extends BookApp {
@@ -13,25 +17,45 @@ public class RMApp extends BookApp {
         app.startSingle();
     }
 
+    //email=854415002%40qq.com&password=q123456&_token=ja3S4ViDTYVNsWTYWhoLhx5R373Ug5ID6bYOTA3W
+    private void login() {
+        Map<String, String> params = new HashMap<>();
+        params.put("email", "854415002@qq.com");
+        params.put("password", "q123456");
+        params.put("_token", "ja3S4ViDTYVNsWTYWhoLhx5R373Ug5ID6bYOTA3W");
+
+        TaskModel taskModel = createTask(DOWN);
+        taskModel.url = "http://moreread.me/login";
+        taskModel.params = params;
+        taskModel.requestType = HttpUtils.POST;
+        addHttpTask(taskModel);
+    }
+
     @Override
     protected void config() {
         super.config();
-
         TaskModel taskModel = createTask(HOME);
         taskModel.url = "http://moreread.me";
         addHttpTask(taskModel);
+
+//        login();
+//        TaskModel taskModel = createTask(HOME);
+//        taskModel.url = "http://moreread.me";
+//        addHttpTask(taskModel);
     }
 
     @Override
     public void parse(TaskModel task) {
         switch (task.tag) {
             case HOME:
-                parseHome(task);
+//                parseHome(task);
+                login();
                 break;
             case LIST:
                 parseList(task);
                 break;
             case INFO:
+                parseInfo(task);
                 break;
         }
     }
@@ -49,6 +73,9 @@ public class RMApp extends BookApp {
             TaskModel taskModel = createTask(LIST);
             taskModel.url = "http://moreread.me/?page=" + i;
             addHttpTask(taskModel);
+
+            if (D.DEBUG)
+                break;
         }
     }
 
@@ -58,6 +85,8 @@ public class RMApp extends BookApp {
             TaskModel taskModel = createTask(INFO);
             taskModel.url = e.attr("href");
             addHttpTask(taskModel);
+            if (D.DEBUG)
+                break;
         }
     }
 

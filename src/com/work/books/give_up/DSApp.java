@@ -1,17 +1,21 @@
-package com.work.books.apps;
+package com.work.books.give_up;
 
-import com.work.books.utils.*;
 import com.company.core.model.TaskModel;
 import com.company.core.utils.D;
+import com.work.books.utils.*;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 //读书小站  https://ibooks.org.cn
+//没下载地址
 public class DSApp extends BookApp {
     private static final String BASE_URL = "https://ibooks.org.cn";
     private static final String HOME = "HOME";
     private static final String ITEMS = "ITEMS";
+    private AtomicInteger pageCount = new AtomicInteger(2);
 
     public static void main(String[] args) {
         DSApp app = new DSApp();
@@ -44,23 +48,31 @@ public class DSApp extends BookApp {
     private void parseHome(TaskModel task) {
         parseList(task);
 
-        Elements pageEles = task.resDoc.select("#content > nav.navigation.pagination > div.nav-links > a.page-numbers");
-        String lastPage = pageEles.get(pageEles.size() - 2).attr("href");
-        String pageCount = lastPage.substring(lastPage.lastIndexOf("/") + 1);
-        int count = Integer.parseInt(pageCount);
+        if (D.DEBUG && pageCount.get() == 3)
+            return;
 
-        scanInfoModel.cateInfo.put(DEFAULT_SCAN_CATE, new ScanInfoModel.ScanInfo(DEFAULT_SCAN_CATE, count));
-        count = pageCountOff(count, DEFAULT_SCAN_CATE, task.url);
-
-        for (int i = 1; i <= count; i++) {
-            //https://ibooks.org.cn/page/98
-            TaskModel taskModel = new TaskModel(this, LIST);
-            taskModel.url = "https://ibooks.org.cn/page/" + i;
+        Elements pageEles = task.resDoc.select("#nav-below > div.nav-previous > a > span");
+        if (pageEles != null) {
+            TaskModel taskModel = new TaskModel(this, HOME);
+            taskModel.url = "https://ibooks.org.cn/page/" + pageCount.getAndIncrement();
             addHttpTask(taskModel);
-
-            if (D.DEBUG)
-                break;
         }
+
+//        String lastPage = pageEles.get(pageEles.size() - 2).attr("href");
+//        String pageCount = lastPage.substring(lastPage.lastIndexOf("/") + 1);
+//        int count = Integer.parseInt(pageCount);
+
+//        scanInfoModel.cateInfo.put(DEFAULT_SCAN_CATE, new ScanInfoModel.ScanInfo(DEFAULT_SCAN_CATE, count));
+//        count = pageCountOff(count, DEFAULT_SCAN_CATE, task.url);
+
+//        for (int i = 1; i <= count; i++) {
+//            TaskModel taskModel = new TaskModel(this, LIST);
+//            taskModel.url = "https://ibooks.org.cn/page/" + i;
+//            addHttpTask(taskModel);
+
+//            if (D.DEBUG)
+//                break;
+//        }
     }
 
     private void parseList(TaskModel task) {
@@ -101,7 +113,8 @@ public class DSApp extends BookApp {
         }
         model.addDownModel(downModel);
 
-        D.i("model==>" + model.toString());
+        if (D.DEBUG)
+            D.i("model==>" + model.toString());
         saveBook(model);
     }
 
