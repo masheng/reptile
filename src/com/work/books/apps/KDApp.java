@@ -78,6 +78,10 @@ public class KDApp extends BookAppTemp {
                 break;
             }
         }
+        if (downEle == null) {
+            D.e("KDApp parseInfo 获取url失败==>" + task.url);
+            return;
+        }
         String url = downEle.selectFirst("a").attr("href");
         //<a href="https://kindleer.com/wp-content/themes/Begin/inc/go.php?url=http://pan.baidu.com/s/1pL8RJSJ" site="mebook" target="_blank" rel="noopener noreferrer">百度网盘</a>
 
@@ -87,12 +91,13 @@ public class KDApp extends BookAppTemp {
             downUrl = codeStr.split("提取码：");
         else if (codeStr.contains("提取码:"))
             downUrl = codeStr.split("提取码:");
-        else
-            D.e("获取提取码出错==>" + task.url);
-        String code = downUrl[1].trim();
 
-        if (StrUtils.isEmpty(url) || StrUtils.isEmpty(code)) {
-            D.e("获取下载地址或提取码失败==>" + task.url);
+        String code = "";
+        if (downUrl != null && downUrl.length > 1)
+            code = downUrl[1].trim();
+
+        if (StrUtils.isEmpty(url)) {
+            D.e("获取下载地址失败==>" + task.url);
             return;
         }
 

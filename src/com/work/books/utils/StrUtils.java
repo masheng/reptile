@@ -15,8 +15,8 @@ public class StrUtils {
     public static String subStr(String str, String subStart, String subEnd, boolean first) {
         if (!str.contains(subStart) || !str.contains(subEnd)) {
             D.w(String.format("subStr==>subStart:%s  subEnd:%s  str:%s", subStart, subEnd, str));
-            throw new RuntimeException("==>subStr");
-//            return str;
+//            throw new RuntimeException("==>subStr");
+            return str;
         }
 
         int start = first ? str.indexOf(subStart) : str.lastIndexOf(subStart);

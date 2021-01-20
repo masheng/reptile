@@ -79,7 +79,7 @@ public class ThreadUtils {
                 flag = 0;
 
 //            D.i(String.format("queue size:%d  thread count:%d  during s:%d", threadPool.getQueue().size(), threadPool.getActiveCount(), (System.currentTimeMillis() - time) / 1000));
-//            log();
+            log();
 
             try {
                 Thread.currentThread().sleep(10000);

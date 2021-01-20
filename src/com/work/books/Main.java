@@ -22,6 +22,9 @@ public class Main {
             }
         }
 
+        //TODO 去除HApp
+        apps.remove("HApp");
+
         CountDownLatch latch = new CountDownLatch(apps.size());
 
         for (String name : apps) {
